@@ -27,19 +27,25 @@ def _inverted_res_block(inputs, expansion, stride, alpha, filters, block_id):
 
     # Expand
     if block_id:
-        x = Conv2D(expansion * in_channels, kernel_size=1, strides=1, padding='same', use_bias=False, activation=None, kernel_initializer="he_normal", kernel_regularizer=regularizers.l2(4e-5), name=prefix + 'expand')(x)
+        x = Conv2D(expansion * in_channels, kernel_size=1, strides=1, padding='same', use_bias=False,
+                   activation=None, kernel_initializer="he_normal", kernel_regularizer=regularizers.l2(4e-5), 
+                   name=prefix + 'expand')(x)
         x = BatchNormalization(epsilon=1e-3, momentum=0.999, name=prefix + 'expand_BN')(x)
         x = ReLU(6., name=prefix + 'expand_relu')(x)
     else:
         prefix = 'expanded_conv_'
 
     # Depthwise
-    x = DepthwiseConv2D(kernel_size=3, strides=stride, activation=None, use_bias=False, padding='same', kernel_initializer="he_normal", depthwise_regularizer=regularizers.l2(4e-5), name=prefix + 'depthwise')(x)
+    x = DepthwiseConv2D(kernel_size=3, strides=stride, activation=None, use_bias=False, padding='same',
+                        kernel_initializer="he_normal", depthwise_regularizer=regularizers.l2(4e-5), 
+                        name=prefix + 'depthwise')(x)
     x = BatchNormalization(epsilon=1e-3, momentum=0.999, name=prefix + 'depthwise_BN')(x)
     x = ReLU(6., name=prefix + 'depthwise_relu')(x)
 
     # Project
-    x = Conv2D(pointwise_filters, kernel_size=1, strides=1, padding='same', use_bias=False, activation=None, kernel_initializer="he_normal", kernel_regularizer=regularizers.l2(4e-5), name=prefix + 'project')(x)
+    x = Conv2D(pointwise_filters, kernel_size=1, strides=1, padding='same', use_bias=False, 
+               activation=None, kernel_initializer="he_normal", kernel_regularizer=regularizers.l2(4e-5), 
+               name=prefix + 'project')(x)
     x = BatchNormalization(epsilon=1e-3, momentum=0.999, name=prefix + 'project_BN')(x)
 
 
@@ -61,7 +67,9 @@ def MobileNetV2(input_shape=(32, 32, 3),
     img_input = Input(shape=input_shape)
 
     # model architechture
-    x = Conv2D(first_block_filters, kernel_size=3, strides=1, padding='same', use_bias=False, kernel_initializer="he_normal", kernel_regularizer=regularizers.l2(4e-5), name='Conv1')(img_input)
+    x = Conv2D(first_block_filters, kernel_size=3, strides=1, padding='same', use_bias=False, 
+               kernel_initializer="he_normal", kernel_regularizer=regularizers.l2(4e-5), 
+               name='Conv1')(img_input)
     #x = BatchNormalization(epsilon=1e-3, momentum=0.999, name='bn_Conv1')(x)
     #x = ReLU(6., name='Conv1_relu')(x)
 
